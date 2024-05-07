@@ -39,6 +39,26 @@ services:
       - SPRING_FLYWAY_URL=jdbc:postgresql://polar-postgres/polardb_order
       - POLAR_CATALOG_SERVICE_URI=http://catalog-service:9001
 
+  edge-service:
+    depends_on:
+      - polar-redis
+    image: "edge-service"
+    container_name: "edge-service"
+    ports:
+      - 9000:9000
+      - 8000:8000
+    environment:
+      # Buildpacks environment variable to configure the number of threads in memory calculation
+      - BPL_JVM_THREAD_COUNT=50
+      # Buildpacks environment variable to enable debug through a socket on port 8000
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8000
+      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
+      - SPRING_REDIS_HOST=polar-redis
+      - SPRING_REDIS_PORT=6379
+      - CATALOG_SERVICE_URL=http://catalog-service:9001
+      - ORDER_SERVICE_URL=http://order-service:9002
+
   config-service:
     image: "config-service"
     container_name: "config-service"
