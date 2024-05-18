@@ -23,6 +23,7 @@ services:
   order-service:
     depends_on:
       - polar-postgres
+      - polar-rabbitmq
     image: "order-service"
     container_name: "order-service"
     ports:
@@ -38,6 +39,7 @@ services:
       - SPRING_R2DBC_URL=r2dbc:postgresql://polar-postgres/polardb_order
       - SPRING_FLYWAY_URL=jdbc:postgresql://polar-postgres/polardb_order
       - POLAR_CATALOG_SERVICE_URI=http://catalog-service:9001
+      - SPRING_RABBITMQ_HOST=polar-rabbitmq
 
   dispatcher-service:
     depends_on:
